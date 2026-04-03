@@ -19,6 +19,27 @@
       </div>
     </section>
 
+    <!-- Quick Navigation -->
+    <section class="section quick-nav-section">
+      <div class="container">
+        <h2 class="section__title">探索 DevBit Tech</h2>
+        <p class="section__subtitle">快速跳转到你感兴趣的板块</p>
+        <div class="quick-nav-grid">
+          <NuxtLink
+            v-for="nav in quickNavItems"
+            :key="nav.to"
+            :to="nav.to"
+            class="quick-nav-card"
+          >
+            <div class="quick-nav-card__icon">{{ nav.icon }}</div>
+            <h3 class="quick-nav-card__title">{{ nav.title }}</h3>
+            <p class="quick-nav-card__desc">{{ nav.description }}</p>
+            <span class="quick-nav-card__arrow">→</span>
+          </NuxtLink>
+        </div>
+      </div>
+    </section>
+
     <!-- Features -->
     <section class="section">
       <div class="container">
@@ -37,6 +58,33 @@
 </template>
 
 <script setup lang="ts">
+const quickNavItems = [
+  {
+    icon: '💬',
+    title: '论坛',
+    description: '参与技术讨论，分享经验，提问解答。',
+    to: '/forum'
+  },
+  {
+    icon: '🎮',
+    title: '游戏',
+    description: '探索我们精心挑选的开发者小游戏。',
+    to: '/games'
+  },
+  {
+    icon: '🏆',
+    title: '排行榜',
+    description: '查看社区贡献者与竞技活动排名。',
+    to: '/leaderboard'
+  },
+  {
+    icon: '👥',
+    title: '团队介绍',
+    description: '了解 DevBit Tech 背后的核心团队。',
+    to: '/about'
+  }
+]
+
 const features = [
   {
     icon: '⚡',
