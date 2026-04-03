@@ -221,6 +221,12 @@ a:hover {
   font-size: 0.9rem;
 }
 
+@media (min-width: 900px) {
+  .feature-card--global {
+    grid-column: 2;
+  }
+}
+
 /* Quick Navigation */
 .quick-nav-section {
   background: linear-gradient(180deg, transparent, rgba(99, 102, 241, 0.04) 50%, transparent);

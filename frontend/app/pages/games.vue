@@ -5,7 +5,7 @@
         <p class="hero__badge">Coming Soon</p>
         <h1 class="page-header__title">🎮 游戏</h1>
         <p class="page-header__subtitle">
-          探索我们精心挑选的开发者小游戏，寓教于乐，提升编程技能。
+          探索我们开发的小游戏，寓教于乐，提升技能。
         </p>
       </div>
     </section>
@@ -21,6 +21,6 @@
 <script setup lang="ts">
 useSeoMeta({
   title: 'DevBit Tech – 游戏',
-  description: '探索我们精心挑选的开发者小游戏。'
+  description: '探索我们精心开发的小游戏。'
 })
 </script>
