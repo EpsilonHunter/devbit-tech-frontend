@@ -1,0 +1,30 @@
+# Node dependencies
+node_modules/
+frontend/node_modules/
+
+# Nuxt build outputs
+frontend/.output/
+frontend/.data/
+frontend/.nuxt/
+frontend/.nitro/
+frontend/.cache/
+frontend/dist/
+
+# Logs
+*.log
+logs/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Editor
+.DS_Store
+.fleet
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
