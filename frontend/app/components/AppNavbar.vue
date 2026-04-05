@@ -14,3 +14,7 @@
     </div>
   </nav>
 </template>
+
+<script setup lang="ts">
+const { isAuthenticated, user, logout } = useAuth()
+</script>
