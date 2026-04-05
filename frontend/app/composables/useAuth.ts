@@ -6,6 +6,15 @@ interface User {
 
 export const useAuth = () => {
   const config = useRuntimeConfig()
+  const authApi = $fetch.create({
+    baseURL: config.public.apiBaseUrl,
+    headers: {
+      accept: 'application/json',
+      'content-type': 'application/json'
+    },
+    timeout: 10000,
+    retry: 0
+  })
 
   const token = useCookie<string | null>('auth_token', {
     default: () => null,
@@ -17,11 +26,16 @@ export const useAuth = () => {
 
   const isAuthenticated = computed(() => !!token.value)
 
-  const login = async (email: string, password: string) => {
-    const data = await $fetch<{ token: string; user: User }>('/login', {
-      baseURL: config.public.apiBaseUrl,
+  const authRequest = <T>(path: string, body: Record<string, string>) =>
+    authApi<T>(path, {
       method: 'POST',
-      body: { email, password }
+      body
+    })
+
+  const login = async (email: string, password: string) => {
+    const data = await authRequest<{ token: string; user: User }>('/login', {
+      email: email.trim(),
+      password
     })
     token.value = data.token
     user.value = data.user
@@ -29,18 +43,17 @@ export const useAuth = () => {
   }
 
   const sendEmailCode = async (email: string) => {
-    await $fetch('/email/code', {
-      baseURL: config.public.apiBaseUrl,
-      method: 'POST',
-      body: { email }
+    await authRequest('/email/code', {
+      email: email.trim()
     })
   }
 
   const register = async (name: string, email: string, password: string, emailCode: string) => {
-    await $fetch<User>('/', {
-      baseURL: config.public.apiBaseUrl,
-      method: 'POST',
-      body: { name, email, password, emailCode }
+    await authRequest<User>('/', {
+      name: name.trim(),
+      email: email.trim(),
+      password,
+      emailCode: emailCode.trim()
     })
     await navigateTo('/login')
   }
