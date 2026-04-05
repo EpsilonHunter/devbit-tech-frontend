@@ -38,13 +38,13 @@
           </div>
 
           <div class="form-group">
-            <label class="form-label" for="emailCode">Email Verification Code</label>
+            <label class="form-label" for="code">Email Verification Code</label>
             <input
-              id="emailCode"
-              v-model="form.emailCode"
+              id="code"
+              v-model="form.code"
               type="text"
               class="form-control"
-              :class="{ 'form-control--error': errors.emailCode }"
+              :class="{ 'form-control--error': errors.code }"
               placeholder="Enter the code from your email"
               autocomplete="one-time-code"
             />
@@ -56,7 +56,7 @@
             >
               {{ codeLoading ? 'Sending...' : cooldown > 0 ? `Resend in ${cooldown}s` : 'Send Verification Code' }}
             </button>
-            <span v-if="errors.emailCode" class="form-error">{{ errors.emailCode }}</span>
+            <span v-if="errors.code" class="form-error">{{ errors.code }}</span>
           </div>
 
           <div class="form-group">
@@ -108,8 +108,8 @@ useSeoMeta({
 
 const { register, sendEmailCode } = useAuth()
 
-const form = reactive({ name: '', email: '', emailCode: '', password: '', confirmPassword: '' })
-const errors = reactive({ name: '', email: '', emailCode: '', password: '', confirmPassword: '' })
+const form = reactive({ name: '', email: '', code: '', password: '', confirmPassword: '' })
+const errors = reactive({ name: '', email: '', code: '', password: '', confirmPassword: '' })
 const apiError = ref('')
 const codeMessage = ref('')
 const loading = ref(false)
@@ -148,7 +148,7 @@ onBeforeUnmount(() => {
 function validate() {
   errors.name = ''
   errors.email = ''
-  errors.emailCode = ''
+  errors.code = ''
   errors.password = ''
   errors.confirmPassword = ''
   let valid = true
@@ -166,11 +166,11 @@ function validate() {
     valid = false
   }
 
-  if (!form.emailCode.trim()) {
-    errors.emailCode = 'Email verification code is required.'
+  if (!form.code.trim()) {
+    errors.code = 'Email verification code is required.'
     valid = false
-  } else if (!/^\d{4,8}$/.test(form.emailCode.trim())) {
-    errors.emailCode = 'Please enter a valid verification code.'
+  } else if (!/^\d{4,8}$/.test(form.code.trim())) {
+    errors.code = 'Please enter a valid verification code.'
     valid = false
   }
 
@@ -229,7 +229,12 @@ async function handleSubmit() {
 
   loading.value = true
   try {
-    await register(form.name.trim(), form.email.trim(), form.password, form.emailCode.trim())
+    await register(
+      form.name.trim(),
+      form.email.trim(),
+      form.password,
+      form.code.trim()
+    )
   } catch (err: unknown) {
     const e = err as { data?: { message?: string }; message?: string }
     apiError.value = e?.data?.message ?? e?.message ?? 'Registration failed. Please try again.'

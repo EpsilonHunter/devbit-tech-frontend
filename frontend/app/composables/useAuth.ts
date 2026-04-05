@@ -47,7 +47,7 @@ export const useAuth = () => {
       password
     })
     token.value = data.token
-    if (process.client) {
+    if (import.meta.client) {
       localStorage.setItem('token', data.token)
     }
     if (data.user) {
@@ -82,12 +82,18 @@ export const useAuth = () => {
     }
   }
 
-  const register = async (name: string, email: string, password: string, emailCode: string) => {
+  const register = async (
+    name: string,
+    email: string,
+    password: string,
+    code: string
+  ) => {
     const payload = {
       name: name.trim(),
       email: email.trim(),
+      code: code.trim(),
       password,
-      emailCode: emailCode.trim()
+      confirm_password: password
     }
 
     try {
@@ -107,7 +113,7 @@ export const useAuth = () => {
 
   const logout = () => {
     token.value = null
-    if (process.client) {
+    if (import.meta.client) {
       localStorage.removeItem('token')
     }
     user.value = null
