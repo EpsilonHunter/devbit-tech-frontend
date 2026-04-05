@@ -2,27 +2,33 @@
   <div>
     <div class="page-header">
       <div class="container">
-        <h1 class="page-header__title">About DevBit Tech</h1>
-        <p class="page-header__subtitle">
-          We're a team of passionate engineers building tools that make developers more productive.
+        <h1 class="page-header__title">或许</h1>
+        <p class="page-header__subtitle about-subtitle--large">
+          将谓偷闲学少年
+        </p>
+        <p class="page-header__subtitle about-subtitle--large">
+          但
+        </p>
+        <p class="page-header__subtitle about-subtitle--Bold">
+          谁又不曾是少年
         </p>
       </div>
     </div>
 
     <section class="about-section">
       <div class="container">
-        <h2 class="section__title">Our Mission</h2>
+        <h2 class="section__title">我们的目标</h2>
         <p>
-          DevBit Tech was founded with a simple belief: developer tooling should be a joy to use.
-          We're on a mission to reduce friction in the software development lifecycle and help teams
-          ship better software faster.
+          我们相信：网站应该让人感到快乐
         </p>
         <p>
-          From open-source utilities to enterprise-grade platforms, every product we build is driven
-          by real developer pain-points and a commitment to quality.
+          快乐不能构筑现实，但现实是为了更快乐的生活
+        </p>
+        <p>
+          We believe that websites should make people happy.Happiness cannot construct reality, but reality is for a happier life
         </p>
 
-        <h2 class="section__title" style="margin-top: 3rem;">The Team</h2>
+        <h2 class="section__title" style="margin-top: 3rem;">我们的团队</h2>
         <div class="team-grid">
           <div v-for="member in team" :key="member.name" class="team-card">
             <div class="team-card__avatar">{{ member.avatar }}</div>
@@ -37,10 +43,8 @@
 
 <script setup lang="ts">
 const team = [
-  { avatar: '👩‍💻', name: 'Alice Chen', role: 'Founder & CEO' },
-  { avatar: '👨‍💻', name: 'Bob Martinez', role: 'Lead Engineer' },
-  { avatar: '🧑‍🎨', name: 'Sam Nguyen', role: 'Design Lead' },
-  { avatar: '👩‍🔬', name: 'Eva Müller', role: 'DevRel' }
+  { avatar: '👨‍💻', name: 'Clearders', role: '全栈前端工程师' },
+  { avatar: '🧑‍🎨', name: 'EpsilonHunter', role: '后端工程师' },
 ]
 
 useSeoMeta({
@@ -48,3 +52,13 @@ useSeoMeta({
   description: 'Learn about the team and mission behind DevBit Tech.'
 })
 </script>
+
+<style scoped>
+.about-subtitle--large {
+  font-size: 1.35rem;
+}
+.about-subtitle--Bold {
+  font-size: 1.55rem;
+  font-weight: bold;
+}
+</style>
