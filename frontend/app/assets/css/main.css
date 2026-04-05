@@ -560,6 +560,15 @@ a:hover {
   padding: 0.625rem 0.875rem;
 }
 
+.form-success {
+  color: #4ade80;
+  background: rgba(74, 222, 128, 0.1);
+  border: 1px solid rgba(74, 222, 128, 0.25);
+  border-radius: 0.5rem;
+  padding: 0.625rem 0.875rem;
+  font-size: 0.85rem;
+}
+
 .btn--full {
   width: 100%;
   justify-content: center;

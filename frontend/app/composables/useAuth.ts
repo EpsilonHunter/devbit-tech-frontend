@@ -28,11 +28,19 @@ export const useAuth = () => {
     await navigateTo('/')
   }
 
-  const register = async (name: string, email: string, password: string) => {
+  const sendEmailCode = async (email: string) => {
+    await $fetch('/email/code', {
+      baseURL: config.public.apiBaseUrl,
+      method: 'POST',
+      body: { email }
+    })
+  }
+
+  const register = async (name: string, email: string, password: string, emailCode: string) => {
     await $fetch<User>('/', {
       baseURL: config.public.apiBaseUrl,
       method: 'POST',
-      body: { name, email, password }
+      body: { name, email, password, emailCode }
     })
     await navigateTo('/login')
   }
@@ -43,5 +51,5 @@ export const useAuth = () => {
     return navigateTo('/login')
   }
 
-  return { token, user, isAuthenticated, login, register, logout }
+  return { token, user, isAuthenticated, login, sendEmailCode, register, logout }
 }

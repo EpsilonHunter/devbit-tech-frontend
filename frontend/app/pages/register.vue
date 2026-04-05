@@ -7,6 +7,7 @@
 
         <form class="auth-form" novalidate @submit.prevent="handleSubmit">
           <div v-if="apiError" class="form-error form-error--global">{{ apiError }}</div>
+          <div v-if="codeMessage" class="form-success">{{ codeMessage }}</div>
 
           <div class="form-group">
             <label class="form-label" for="name">Name</label>
@@ -34,6 +35,28 @@
               autocomplete="email"
             />
             <span v-if="errors.email" class="form-error">{{ errors.email }}</span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="emailCode">Email Verification Code</label>
+            <input
+              id="emailCode"
+              v-model="form.emailCode"
+              type="text"
+              class="form-control"
+              :class="{ 'form-control--error': errors.emailCode }"
+              placeholder="Enter the code from your email"
+              autocomplete="one-time-code"
+            />
+            <button
+              type="button"
+              class="btn btn--outline"
+              :disabled="codeLoading || cooldown > 0"
+              @click="handleSendCode"
+            >
+              {{ codeLoading ? 'Sending...' : cooldown > 0 ? `Resend in ${cooldown}s` : 'Send Verification Code' }}
+            </button>
+            <span v-if="errors.emailCode" class="form-error">{{ errors.emailCode }}</span>
           </div>
 
           <div class="form-group">
@@ -65,7 +88,7 @@
           </div>
 
           <button type="submit" class="btn btn--primary btn--full" :disabled="loading">
-            {{ loading ? 'Creating account…' : 'Create Account' }}
+            {{ loading ? 'Creating account...' : 'Create Account' }}
           </button>
         </form>
 
@@ -79,20 +102,53 @@
 
 <script setup lang="ts">
 useSeoMeta({
-  title: 'Create Account – DevBit Tech',
+  title: 'Create Account - DevBit Tech',
   description: 'Create a new DevBit Tech account.'
 })
 
-const { register } = useAuth()
+const { register, sendEmailCode } = useAuth()
 
-const form = reactive({ name: '', email: '', password: '', confirmPassword: '' })
-const errors = reactive({ name: '', email: '', password: '', confirmPassword: '' })
+const form = reactive({ name: '', email: '', emailCode: '', password: '', confirmPassword: '' })
+const errors = reactive({ name: '', email: '', emailCode: '', password: '', confirmPassword: '' })
 const apiError = ref('')
+const codeMessage = ref('')
 const loading = ref(false)
+const codeLoading = ref(false)
+const cooldown = ref(0)
+let cooldownTimer: ReturnType<typeof setInterval> | null = null
+
+function isValidEmail(email: string) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+}
+
+function stopCooldown() {
+  if (cooldownTimer) {
+    clearInterval(cooldownTimer)
+    cooldownTimer = null
+  }
+}
+
+function startCooldown(seconds = 60) {
+  stopCooldown()
+  cooldown.value = seconds
+  cooldownTimer = setInterval(() => {
+    if (cooldown.value <= 1) {
+      cooldown.value = 0
+      stopCooldown()
+      return
+    }
+    cooldown.value -= 1
+  }, 1000)
+}
+
+onBeforeUnmount(() => {
+  stopCooldown()
+})
 
 function validate() {
   errors.name = ''
   errors.email = ''
+  errors.emailCode = ''
   errors.password = ''
   errors.confirmPassword = ''
   let valid = true
@@ -105,8 +161,16 @@ function validate() {
   if (!form.email) {
     errors.email = 'Email is required.'
     valid = false
-  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
+  } else if (!isValidEmail(form.email)) {
     errors.email = 'Please enter a valid email address.'
+    valid = false
+  }
+
+  if (!form.emailCode.trim()) {
+    errors.emailCode = 'Email verification code is required.'
+    valid = false
+  } else if (!/^\d{4,8}$/.test(form.emailCode.trim())) {
+    errors.emailCode = 'Please enter a valid verification code.'
     valid = false
   }
 
@@ -129,13 +193,43 @@ function validate() {
   return valid
 }
 
+async function handleSendCode() {
+  apiError.value = ''
+  codeMessage.value = ''
+  errors.email = ''
+
+  const email = form.email.trim()
+  if (!email) {
+    errors.email = 'Email is required before sending code.'
+    return
+  }
+
+  if (!isValidEmail(email)) {
+    errors.email = 'Please enter a valid email address.'
+    return
+  }
+
+  codeLoading.value = true
+  try {
+    await sendEmailCode(email)
+    codeMessage.value = 'Verification code sent. Please check your inbox.'
+    startCooldown()
+  } catch (err: unknown) {
+    const e = err as { data?: { message?: string }; message?: string }
+    apiError.value = e?.data?.message ?? e?.message ?? 'Failed to send verification code. Please try again.'
+  } finally {
+    codeLoading.value = false
+  }
+}
+
 async function handleSubmit() {
   apiError.value = ''
+  codeMessage.value = ''
   if (!validate()) return
 
   loading.value = true
   try {
-    await register(form.name.trim(), form.email, form.password)
+    await register(form.name.trim(), form.email.trim(), form.password, form.emailCode.trim())
   } catch (err: unknown) {
     const e = err as { data?: { message?: string }; message?: string }
     apiError.value = e?.data?.message ?? e?.message ?? 'Registration failed. Please try again.'
