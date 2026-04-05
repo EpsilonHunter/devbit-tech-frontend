@@ -44,7 +44,7 @@
 <script setup lang="ts">
 const team = [
   { avatar: '👨‍💻', name: 'Clearders', role: '全栈前端工程师' },
-  { avatar: '🧑‍🎨', name: 'EpsilonHunter', role: '后端工程师' },
+  { avatar: '🧑‍🎨', name: 'EpsilonHunter', role: '全栈后端工程师' },
 ]
 
 useSeoMeta({

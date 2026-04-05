@@ -2,7 +2,6 @@
   <div>
     <!-- Hero -->
     <section class="hero">
-      <DynamicBackground />
       <div class="container hero__content">
         <p class="hero__badge">Now in Beta</p>
         <h1 class="hero__title">
