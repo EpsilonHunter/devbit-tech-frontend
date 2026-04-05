@@ -10,6 +10,14 @@
         <li><NuxtLink to="/games">游戏</NuxtLink></li>
         <li><NuxtLink to="/leaderboard">排行榜</NuxtLink></li>
         <li><NuxtLink to="/about">团队介绍</NuxtLink></li>
+        <template v-if="isAuthenticated">
+          <li class="navbar__user">{{ user?.name }}</li>
+          <li><button class="btn btn--outline navbar__logout" @click="logout">Logout</button></li>
+        </template>
+        <template v-else>
+          <li><NuxtLink to="/login" class="btn btn--outline navbar__cta">Login</NuxtLink></li>
+          <li><NuxtLink to="/register" class="btn btn--primary navbar__cta">Register</NuxtLink></li>
+        </template>
       </ul>
     </div>
   </nav>
